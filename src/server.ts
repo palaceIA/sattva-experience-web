@@ -14,13 +14,14 @@ import { testConnection } from './config/database';
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
+const isDevelopment = process.env.NODE_ENV !== 'production';
 const allowedOrigins = process.env.ALLOWED_ORIGINS
     ? process.env.ALLOWED_ORIGINS.split(',').map((origin) => origin.trim())
-    : ['http://localhost:3000'];
+    : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
 
 const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-        if (!origin || allowedOrigins.includes(origin)) {
+        if (!origin || isDevelopment || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('CORS policy: Origin not allowed'));

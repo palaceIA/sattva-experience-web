@@ -8,10 +8,35 @@ export class LotService {
         LEFT JOIN immersions i ON i.id = l.id_immersion
     `;
 
+    static async checkLotNumberExists(immersionId: number, loteNumber: number): Promise<boolean> {
+        const result = await query(
+            `SELECT 1 FROM lots WHERE id_immersion = $1 AND lote_number = $2`,
+            [immersionId, loteNumber]
+        );
+
+        return result.rows.length > 0;
+    }
+
+    static async getLotByNumber(immersionId: number, loteNumber: number): Promise<Lot | null> {
+        const result = await query(
+            `SELECT * FROM lots WHERE id_immersion = $1 AND lote_number = $2`,
+            [immersionId, loteNumber]
+        );
+
+        return result.rows[0] || null;
+    }
+
     static async create(data: CreateLotDTO): Promise<Lot> {
+        // UPSERT: insere ou atualiza se já existe
         const result = await query(
             `INSERT INTO lots (id_immersion, lote_number, valor, quantity_available, data_inicio, data_fim, created_at)
        VALUES ($1, $2, $3, $4, $5, $6, CURRENT_TIMESTAMP)
+       ON CONFLICT (id_immersion, lote_number) 
+       DO UPDATE SET 
+           valor = EXCLUDED.valor,
+           quantity_available = EXCLUDED.quantity_available,
+           data_inicio = EXCLUDED.data_inicio,
+           data_fim = EXCLUDED.data_fim
        RETURNING *`,
             [data.id_immersion, data.lote_number, data.valor, data.quantity_available, data.data_inicio, data.data_fim]
         );

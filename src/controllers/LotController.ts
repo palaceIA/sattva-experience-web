@@ -27,6 +27,7 @@ export class LotController {
                 return;
             }
 
+            // UPSERT automático no banco de dados
             const lot = await LotService.create({
                 id_immersion,
                 lote_number,
@@ -38,7 +39,7 @@ export class LotController {
 
             res.status(201).json({
                 success: true,
-                message: 'Lote criado com sucesso',
+                message: 'Lote salvo com sucesso',
                 data: lot
             });
         } catch (error: any) {
