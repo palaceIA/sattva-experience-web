@@ -4,19 +4,18 @@ import { authMiddleware } from '../middleware/authMiddleware';
 import { lotImageUpload } from '../middleware/uploadMiddleware';
 
 const router = Router();
-const useAuth = process.env.NODE_ENV === 'production';
-if (useAuth) {
-    router.use(authMiddleware);
-}
 
-router.post('/', ImmersionController.create);
+// Rotas PÚBLICAS (sem auth)
 router.get('/', ImmersionController.getAll);
 router.get('/active', ImmersionController.getActive);
 router.get('/:id', ImmersionController.getById);
 router.get('/:id/with-lots', ImmersionController.getWithLots);
-router.post('/:id/image', lotImageUpload, ImmersionController.uploadImage);
-router.patch('/:id', ImmersionController.update);
-router.put('/:id', ImmersionController.update);
-router.delete('/:id', ImmersionController.delete);
+
+// Rotas PROTEGIDAS (com auth)
+router.post('/', authMiddleware, ImmersionController.create);
+router.post('/:id/image', authMiddleware, lotImageUpload, ImmersionController.uploadImage);
+router.patch('/:id', authMiddleware, ImmersionController.update);
+router.put('/:id', authMiddleware, ImmersionController.update);
+router.delete('/:id', authMiddleware, ImmersionController.delete);
 
 export default router;
