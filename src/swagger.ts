@@ -19,7 +19,7 @@ export const swaggerDocument = {
   },
   servers: [
     {
-      url: import.meta.env.VITE_API_URL,
+      url: process.env.VITE_API_URL,
       description: 'API'
     }
   ],

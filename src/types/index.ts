@@ -155,7 +155,7 @@ export function getLotStatusLabel(lot: Lot, totalQuantity: number): string {
 }
 
 export class SattvaExperienceAPI {
-    private baseURL: string = `${import.meta.env.VITE_API_URL}/api`;
+    private baseURL: string = `${process.env.VITE_API_URL}/api`;
     async getImmersionWithLots(immersionId: number): Promise<ImmersionWithLots> {
         const response = await fetch(`${this.baseURL}/immersions/${immersionId}/with-lots`);
         const result = await response.json();
