@@ -19,8 +19,8 @@ export const swaggerDocument = {
   },
   servers: [
     {
-      url: 'http://localhost:3000',
-      description: 'Servidor local'
+      url: import.meta.env.VITE_API_URL,
+      description: 'API'
     }
   ],
   components: {
